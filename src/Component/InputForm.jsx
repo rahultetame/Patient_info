@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Row, Col, Table } from "react-bootstrap";
 import { useState } from "react";
 import PatientList from "../Component/PatientList";
+import Popup from "./Popup";
 import { Button } from "bootstrap";
 const InputForm = () => {
   const [name, setName] = useState("");
@@ -9,10 +10,13 @@ const InputForm = () => {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [symptoms, setSymptoms] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   // all details store in one array
   const [allData, setAllData] = useState([]);
   let inputData = {};
+  const [deleteId, setDeleteId] = useState("");
 
+  //get localstorage value
   useEffect(() => {
     const localData = JSON.parse(localStorage.getItem("userList"));
     if (localData) {
@@ -20,6 +24,13 @@ const InputForm = () => {
     }
   }, []);
 
+  //Popup
+  const togglePopup = (i) => {
+    setIsOpen(!isOpen);
+    setDeleteId(i);
+  };
+
+  //empty form validation
   const formValidation = () => {
     inputData = { name, age, gender, address, symptoms };
     if (
@@ -41,14 +52,15 @@ const InputForm = () => {
     setAddress(allData[i].address);
     setSymptoms(allData[i].symptoms);
   };
+
   // Delete Record
-  const deleteRec = (i) => {
-    console.log("delete id");
+  const deleteRec = () => {
     const updateData = allData.filter((ele, ind) => {
-      return ind !== i;
+      return ind !== deleteId;
     });
     localStorage.setItem("userList", JSON.stringify(updateData));
     setAllData(updateData);
+    setIsOpen(false);
   };
 
   // on submit function
@@ -62,7 +74,7 @@ const InputForm = () => {
     }
     setName("");
     setAge("");
-    setGender();
+    setGender("");
     setAddress("");
     setSymptoms("");
   };
@@ -158,11 +170,14 @@ const InputForm = () => {
                 allData={allData}
                 deleteRec={deleteRec}
                 editRec={editRec}
+                togglePopup={togglePopup}
               />
             </tbody>
           </Table>
         </Col>
       </Row>
+
+      <Popup deleteRec={deleteRec} togglePopup={togglePopup} isOpen={isOpen} />
     </>
   );
 };

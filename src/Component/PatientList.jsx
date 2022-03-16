@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import { PropTypes } from "prop-types";
-const PatientList = ({ allData, deleteRec, editRec }) => {
+import { propTypes } from "react-bootstrap/esm/Image";
+const PatientList = ({ allData, editRec, togglePopup }) => {
   return (
     <>
       {allData?.map((e, i) => (
@@ -13,7 +14,7 @@ const PatientList = ({ allData, deleteRec, editRec }) => {
           <td>{e?.symptoms}</td>
           <td>{e?.address}</td>
           <td width={170}>
-            <button className="btn btn-danger" onClick={() => deleteRec(i)}>
+            <button className="btn btn-danger" onClick={() => togglePopup(i)}>
               Delete
             </button>{" "}
             <button className="btn btn-primary" onClick={() => editRec(i)}>
@@ -28,14 +29,14 @@ const PatientList = ({ allData, deleteRec, editRec }) => {
 
 PatientList.prototype = {
   allData: PropTypes.array,
-  deleteRec: PropTypes.func,
   editRec: PropTypes.func,
+  togglePopup: PropTypes.func,
 };
 
 PatientList.default = {
   list: [],
-  deleteRec: () => {},
   editRec: () => {},
+  togglePopup: () => {},
 };
 
 export default PatientList;
